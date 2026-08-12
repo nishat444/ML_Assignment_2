@@ -32,8 +32,8 @@ The dataset meets assignment constraints (**≥ 12 features**, **≥ 500 instanc
 
 **https://github.com/nishat444/ML_Assignment_2**
 
-**Live Streamlit App Link (after Streamlit Community Cloud deploy):**  
-> `https://<YOUR_APP_NAME>.streamlit.app`
+**Live Streamlit App Link:**  
+**https://nishat444-ml-assignment-2-app-jwdbuo.streamlit.app/**
 
 ---
 
