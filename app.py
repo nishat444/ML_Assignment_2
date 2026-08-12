@@ -133,10 +133,19 @@ def main():
         <style>
         .block-container { padding-top: 1.2rem; }
         div[data-testid="stMetric"] {
-            background: #f4f7fb;
-            border: 1px solid #d9e2ec;
+            background-color: #e8eef5;
+            border: 1px solid #9fb3c8;
             border-radius: 10px;
             padding: 0.55rem 0.75rem;
+        }
+        div[data-testid="stMetric"] label,
+        div[data-testid="stMetric"] [data-testid="stMetricLabel"],
+        div[data-testid="stMetric"] [data-testid="stMetricValue"],
+        div[data-testid="stMetric"] [data-testid="stMetricDelta"] {
+            color: #102a43 !important;
+        }
+        div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+            font-weight: 700 !important;
         }
         </style>
         """,
