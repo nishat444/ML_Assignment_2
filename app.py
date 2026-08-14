@@ -162,9 +162,7 @@ def main():
     class_names = [str(c) for c in label_encoder.classes_]
 
     with st.sidebar:
-        st.header("Controls")
-        model_name = st.selectbox("Select Model", list(MODEL_FILES.keys()))
-        st.markdown("---")
+        st.header("Dataset help")
         st.markdown("**Expected CSV columns**")
         st.code(", ".join(feature_names + ["Class"]), language=None)
         st.markdown(
@@ -211,10 +209,19 @@ def main():
         )
         st.stop()
 
+    st.subheader("2. Select a model")
+    model_name = st.selectbox(
+        "Choose a classifier to evaluate on the loaded test data",
+        list(MODEL_FILES.keys()),
+        key="model_selector",
+        help="Metrics, confusion matrix, and classification report below update for this model.",
+    )
+    st.info(f"Showing live results for **{model_name}** on the loaded CSV.")
+
     model = models[model_name]
     metrics, cm, report, y_pred = evaluate(model, X, y_true, class_names)
 
-    st.subheader("2. Evaluation Metrics")
+    st.subheader(f"3. Evaluation Metrics — {model_name}")
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     c1.metric("Accuracy", f"{metrics['Accuracy']:.4f}")
     c2.metric("AUC", f"{metrics['AUC']:.4f}" if metrics["AUC"] is not None else "N/A")
@@ -223,11 +230,16 @@ def main():
     c5.metric("F1 Score", f"{metrics['F1']:.4f}")
     c6.metric("MCC", f"{metrics['MCC']:.4f}")
 
-    st.markdown("#### Comparison — all models (held-out test set from training)")
+    st.markdown("#### Comparison table (same test set, all models)")
+    st.caption(
+        "This table lists every model. The highlighted row is the one you selected. "
+        "Pick Naive Bayes to see a large drop versus Logistic Regression / Random Forest."
+    )
     comparison_rows = []
     for name, m in saved_metrics.items():
         comparison_rows.append(
             {
+                "Selected": "← current" if name == model_name else "",
                 "ML Model Name": name,
                 "Accuracy": m["Accuracy"],
                 "AUC": m["AUC"],
@@ -237,12 +249,19 @@ def main():
                 "MCC": m["MCC"],
             }
         )
-    st.dataframe(pd.DataFrame(comparison_rows), use_container_width=True, hide_index=True)
+    comparison_df = pd.DataFrame(comparison_rows)
+    st.dataframe(
+        comparison_df,
+        use_container_width=True,
+        hide_index=True,
+    )
 
-    st.subheader("3. Confusion Matrix & Classification Report")
+    st.subheader(f"4. Confusion Matrix & Classification Report — {model_name}")
     col_a, col_b = st.columns(2)
     with col_a:
-        st.pyplot(plot_confusion_matrix(cm, class_names), clear_figure=True)
+        fig = plot_confusion_matrix(cm, class_names)
+        fig.suptitle(model_name)
+        st.pyplot(fig, clear_figure=True)
     with col_b:
         report_df = pd.DataFrame(report).transpose()
         st.markdown(f"**Classification Report — {model_name}**")
