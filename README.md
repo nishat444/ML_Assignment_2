@@ -67,55 +67,10 @@ All models were trained on the same stratified train split. Metrics below are co
 
 ---
 
-## Repository structure
-
-```text
-ML_Assignment_2/
-├── app.py                  # Streamlit frontend
-├── requirements.txt
-├── README.md
-├── test_data.csv           # Held-out test set used in experiments
-├── train_models.py         # End-to-end training & metric export
-├── download_data.py        # Downloads UCI Dry Bean Dataset
-├── dry_bean_full.csv       # Full dataset (optional local cache)
-└── model/
-    ├── *.joblib            # Saved fitted models + label encoder
-    ├── metrics.json        # Pre-computed evaluation metrics
-    ├── feature_names.json
-    └── train_classifiers.py
-```
-
----
-
-## How to run locally
+## How to run
 
 ```bash
 pip install -r requirements.txt
-python download_data.py      # first time only
-python train_models.py       # trains models & refreshes metrics / test_data.csv
+python train_models.py
 streamlit run app.py
 ```
-
-## Streamlit app features
-
-1. **CSV upload** for test data (or use bundled `test_data.csv`)
-2. **Model selection** dropdown (all five trained models)
-3. **Evaluation metrics** — Accuracy, AUC, Precision, Recall, F1, MCC
-4. **Confusion matrix** and **classification report**
-
-## Deploy on Streamlit Community Cloud
-
-1. Push this folder to a **public** GitHub repository  
-2. Open [https://streamlit.io/cloud](https://streamlit.io/cloud) and sign in with GitHub  
-3. **New app** → select the repository → branch `main` → main file `app.py`  
-4. Deploy and copy the live URL into section **c** above and into your submission PDF  
-
-## BITS Virtual Lab screenshot
-
-Perform training / Streamlit run once on the BITS Virtual Lab and include **one screenshot** in the submission PDF (assignment requirement — 1 mark).
-
----
-
-## Academic integrity note
-
-This repository is original coursework for BITS WILP ML Assignment 2. Models, metrics, and UI are produced for this submission.
