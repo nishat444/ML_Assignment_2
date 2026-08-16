@@ -101,8 +101,9 @@ def evaluate(model, X, y_true, class_names):
     return metrics, cm, report, y_pred
 
 
-def plot_confusion_matrix(cm, class_names):
-    fig, ax = plt.subplots(figsize=(8, 6))
+def plot_confusion_matrix(cm, class_names, model_name: str):
+    plt.close("all")
+    fig, ax = plt.subplots(figsize=(7.5, 6.2), layout="constrained")
     sns.heatmap(
         cm,
         annot=True,
@@ -111,13 +112,14 @@ def plot_confusion_matrix(cm, class_names):
         xticklabels=class_names,
         yticklabels=class_names,
         ax=ax,
+        cbar_kws={"shrink": 0.75},
     )
     ax.set_xlabel("Predicted")
     ax.set_ylabel("Actual")
-    ax.set_title("Confusion Matrix")
-    plt.xticks(rotation=45, ha="right")
-    plt.yticks(rotation=0)
-    fig.tight_layout()
+    ax.set_title(f"Confusion Matrix — {model_name}", pad=14)
+    ax.tick_params(axis="x", labelrotation=45)
+    ax.tick_params(axis="y", labelrotation=0)
+    plt.setp(ax.get_xticklabels(), ha="right")
     return fig
 
 
@@ -257,15 +259,13 @@ def main():
     )
 
     st.subheader(f"4. Confusion Matrix & Classification Report — {model_name}")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        fig = plot_confusion_matrix(cm, class_names)
-        fig.suptitle(model_name)
-        st.pyplot(fig, clear_figure=True)
-    with col_b:
-        report_df = pd.DataFrame(report).transpose()
-        st.markdown(f"**Classification Report — {model_name}**")
-        st.dataframe(report_df.style.format("{:.4f}"), use_container_width=True)
+    fig = plot_confusion_matrix(cm, class_names, model_name)
+    st.pyplot(fig, clear_figure=True, use_container_width=True)
+    plt.close(fig)
+
+    report_df = pd.DataFrame(report).transpose()
+    st.markdown(f"**Classification Report — {model_name}**")
+    st.dataframe(report_df.style.format("{:.4f}"), use_container_width=True)
 
     pred_df = df.copy()
     pred_df["Predicted_Class"] = label_encoder.inverse_transform(y_pred)
